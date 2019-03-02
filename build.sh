@@ -115,7 +115,7 @@ function install_gotty() {
 # traefik
 function install_traefik() {
     export GOPATH=$DHNT_BASE/go
-    export GO111MODULE=off
+    export GO111MODULE=auto
 
     mkdir -p $GOPATH/src/github.com/containous
     cd $GOPATH/src/github.com/containous
@@ -125,20 +125,23 @@ function install_traefik() {
     cd traefik
     git checkout v1.7
 
-    # go-bindata needs to be executable on the build system
-    (GOOS=  GOARCH= go get github.com/containous/go-bindata/...)
+    make binary
+    cp dist/traefik $GOPATH/bin/linux_amd64
 
-    go generate
-    go install -a -ldflags '-w -extldflags "-static"' ./cmd/traefik
+    # # go-bindata needs to be executable on the build system
+    # (GOOS=  GOARCH= go get github.com/containous/go-bindata/...)
 
-    #web ui
-    cd $GOPATH/src/github.com/containous/traefik/webui
-    yarn install
-    yarn run build
+    # go generate
+    # go install -a -ldflags '-w -extldflags "-static"' ./cmd/traefik
 
-    mkdir -p $DHNT_BASE/home/traefik
-    rm -rf $DHNT_BASE/home/traefik/*
-    cp -R $GOPATH/src/github.com/containous/traefik/static $DHNT_BASE/home/traefik
+    # #web ui
+    # cd $GOPATH/src/github.com/containous/traefik/webui
+    # yarn install
+    # yarn run build
+
+    # mkdir -p $DHNT_BASE/home/traefik
+    # rm -rf $DHNT_BASE/home/traefik/*
+    # cp -R $GOPATH/src/github.com/containous/traefik/static $DHNT_BASE/home/traefik
 }
 
 # reverse proxy
