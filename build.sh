@@ -200,7 +200,7 @@ function install_caddy() {
 
     mkdir -p $GOPATH/src/github.com/mholt
     cd $GOPATH/src/github.com/mholt
-    git clone -b v0.11.4 https://github.com/gostones/caddy.git; if [ $? -ne 0 ]; then
+    git clone -b m3-v0.11.4 https://github.com/gostones/caddy.git; if [ $? -ne 0 ]; then
         echo "Git repo exists?"
     fi
     go get github.com/caddyserver/builds
