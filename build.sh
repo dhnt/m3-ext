@@ -260,6 +260,24 @@ function install_filebrowser() {
     go install
 }
 
+# hugo
+function install_hugo() {
+    export GOPATH=$DHNT_BASE/go
+    export GO111MODULE=on
+
+    mkdir -p $GOPATH/src/github.com/gostones
+    cd $GOPATH/src/github.com/gostones
+    git clone -b release-0.54.0 https://github.com/gostones/hugo.git; if [ $? -ne 0 ]; then
+        echo "Git repo exists?"
+    fi
+
+    cd hugo; if [ $? -ne 0 ]; then
+        exit 1
+    fi
+
+    go install
+}
+
 function install_all() {
     install_ipfs
     install_gogs
@@ -271,6 +289,7 @@ function install_all() {
     install_caddy
     install_chisel
     install_filebrowser
+    install_hugo
 }
 
 ## setup
@@ -308,6 +327,9 @@ case "$1" in
             ;;
         fb)
             install_filebrowser
+            ;;
+        hugo)
+            install_hugo
             ;;
         help)
             echo $"Usage: $0 {ipfs|gogs|gotty|traefik|frp|gost|etcd|caddy|chisel|help|_all_}"
