@@ -204,6 +204,7 @@ function install_caddy() {
         echo "Git repo exists?"
     fi
     go get github.com/caddyserver/builds
+    go get github.com/abiosoft/caddy-git
     cd caddy
 
     # go run build.go --goos=$GOOS --goarch=$GOARCH
