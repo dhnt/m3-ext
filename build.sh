@@ -158,8 +158,9 @@ function install_frp() {
 
     make
     cp bin/* $GOPATH/bin/linux_amd64
-    mkdir -p $DHNT_BASE/etc/frp
-    cp $GOPATH/src/github.com/fatedier/frp/conf/* $DHNT_BASE/etc/frp/
+
+    # mkdir -p $DHNT_BASE/etc/frp
+    # cp $GOPATH/src/github.com/fatedier/frp/conf/* $DHNT_BASE/etc/frp/
 }
 
 # gost
@@ -226,6 +227,39 @@ function install_chisel() {
     go install
 }
 
+# filebrowser
+function install_filebrowser() {
+    export GOPATH=$DHNT_BASE/go
+    export GO111MODULE=on
+
+    mkdir -p $GOPATH/src/github.com/gostones
+    cd $GOPATH/src/github.com/gostones
+
+    git clone --recurse-submodules -b m3-v2.0.3 https://github.com/gostones/filebrowser.git; if [ $? -ne 0 ]; then
+        echo "Git repo exists?"
+    fi
+
+    cd filebrowser; if [ $? -ne 0 ]; then
+        exit 1
+    fi
+
+    # frontend
+    (cd frontend; npm install; npm run build)
+
+    # rice tool
+    # go get github.com/GeertJohan/go.rice
+    # go get github.com/GeertJohan/go.rice/rice
+    which rice; if [ $? -ne 0 ]; then
+        exit 1
+    fi
+
+    go mod download
+
+    (export GO111MODULE=off; cd http; rice embed-go)
+
+    go install
+}
+
 function install_all() {
     install_ipfs
     install_gogs
@@ -236,6 +270,7 @@ function install_all() {
     install_etcd
     install_caddy
     install_chisel
+    install_filebrowser
 }
 
 ## setup
@@ -270,6 +305,9 @@ case "$1" in
             ;;
         chisel)
             install_chisel
+            ;;
+        fb)
+            install_filebrowser
             ;;
         help)
             echo $"Usage: $0 {ipfs|gogs|gotty|traefik|frp|gost|etcd|caddy|chisel|help|_all_}"
