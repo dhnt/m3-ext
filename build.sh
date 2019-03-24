@@ -26,22 +26,33 @@ function download_file {
 }
 
 # ipfs
-function install_ipfs {
-    echo "install_ipfs"
-    VERSION=v0.4.19
+function install_ipfs() {
+    export GO111MODULE=on
 
-    url="https://github.com/ipfs/go-ipfs/releases/download/${VERSION}/go-ipfs_${VERSION}_${GOOS}-${GOARCH}"
-    case "$GOOS" in
-        windows)
-            download_zip "${url}.zip"
-            mv $DHNT_BASE/dl/${GOOS}_${GOARCH}/go-ipfs/ipfs.exe $GOPATH/bin/${GOOS}_${GOARCH}
-            ;;
-        *)
-            download_gz "${url}.tar.gz"
-            mv $DHNT_BASE/dl/${GOOS}_${GOARCH}/go-ipfs/ipfs $GOPATH/bin/${GOOS}_${GOARCH}
-            ;;
-    esac
+    cd $GOPATH/src/github.com/gostones/go-ipfs; if [ $? != 0 ]; then
+        exit 1
+    fi
+    go install -a -ldflags '-w -extldflags "-static"' ./cmd/ipfs; if [ $? != 0 ]; then
+        exit 1
+    fi
 }
+
+# function install_ipfs {
+#     echo "install_ipfs"
+#     VERSION=v0.4.19
+
+#     url="https://github.com/ipfs/go-ipfs/releases/download/${VERSION}/go-ipfs_${VERSION}_${GOOS}-${GOARCH}"
+#     case "$GOOS" in
+#         windows)
+#             download_zip "${url}.zip"
+#             mv $DHNT_BASE/dl/${GOOS}_${GOARCH}/go-ipfs/ipfs.exe $GOPATH/bin/${GOOS}_${GOARCH}
+#             ;;
+#         *)
+#             download_gz "${url}.tar.gz"
+#             mv $DHNT_BASE/dl/${GOOS}_${GOARCH}/go-ipfs/ipfs $GOPATH/bin/${GOOS}_${GOARCH}
+#             ;;
+#     esac
+# }
 
 # git server
 function install_gogs {
