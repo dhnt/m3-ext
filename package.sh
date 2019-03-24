@@ -8,6 +8,7 @@ source setenv.sh
 GOARCH=amd64
 for i in "${goos[@]}"; do
     name=${i}_${GOARCH}
+    mkdir -p dist/$name
     mv $GOPATH/bin/$name/* dist/$name
     rmdir $GOPATH/bin/$name
 done

@@ -4,9 +4,25 @@ set -x
 
 source setenv.sh
 
+# web terminal
+function prepare_gotty {
+    echo "prepare_gotty"
+    export GO111MODULE=on
+
+    mkdir -p $GOPATH/src/github.com/gostones
+    cd $GOPATH/src/github.com/gostones
+    git clone https://github.com/gostones/gotty.git; if [ $? -ne 0 ]; then
+        echo "Git repo exists?"
+    fi
+    cd gotty
+    go mod init
+    go mod download
+}
+
 # caddy
 function prepare_caddy {
     echo "prepare_caddy"
+    export GO111MODULE=off
 
     mkdir -p $GOPATH/src/github.com/mholt
     cd $GOPATH/src/github.com/mholt
@@ -18,6 +34,7 @@ function prepare_caddy {
 }
 
 ##
+prepare_gotty
 prepare_caddy
 
 ##

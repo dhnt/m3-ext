@@ -10,14 +10,19 @@ source setenv.sh
 function download_gz {
     temp=temp_$$.tar.gz
     wget --no-check-certificate -q -O ${temp} "$1" 
-    tar -xzvf ${temp} -C $DHNT_BASE/dl/${GOOS}-${GOARCH}
+    tar -xzvf ${temp} -C $DHNT_BASE/dl/${GOOS}_${GOARCH}
     rm ${temp}
 }
+
 function download_zip {
     temp=temp_$$.zip
     wget --no-check-certificate -q -O ${temp} "$1"
-    unzip ${temp} -d $DHNT_BASE/dl/${GOOS}-${GOARCH}
+    unzip ${temp} -d $DHNT_BASE/dl/${GOOS}_${GOARCH}
     rm ${temp}
+}
+
+function download_file {
+    wget --no-check-certificate -q -O $GOPATH/bin/${GOOS}_${GOARCH}/$2 "$1"
 }
 
 # ipfs
@@ -29,11 +34,11 @@ function install_ipfs {
     case "$GOOS" in
         windows)
             download_zip "${url}.zip"
-            mv $DHNT_BASE/dl/${GOOS}-${GOARCH}/go-ipfs/ipfs.exe $GOPATH/bin/${GOOS}-${GOARCH}
+            mv $DHNT_BASE/dl/${GOOS}_${GOARCH}/go-ipfs/ipfs.exe $GOPATH/bin/${GOOS}_${GOARCH}
             ;;
         *)
             download_gz "${url}.tar.gz"
-            mv $DHNT_BASE/dl/${GOOS}-${GOARCH}/go-ipfs/ipfs $GOPATH/bin/${GOOS}-${GOARCH}
+            mv $DHNT_BASE/dl/${GOOS}_${GOARCH}/go-ipfs/ipfs $GOPATH/bin/${GOOS}_${GOARCH}
             ;;
     esac
 }
@@ -82,23 +87,37 @@ function install_gogs {
 # web terminal
 function install_gotty {
     echo "install_gotty"
-    # export GOPATH=$DHNT_BASE/go
-    # export GO111MODULE=off
 
-    # mkdir -p $GOPATH/src/github.com/yudai
-    # cd $GOPATH/src/github.com/yudai
-    # git clone https://github.com/yudai/gotty.git; if [ $? -ne 0 ]; then
-    #     echo "Git repo exists?"
-    # fi
-    # cd gotty
-    # git pull
+    export GO111MODULE=on
+     case "$GOOS" in
+         windows)
+            echo "TODO"
+            return
+            ;;
+    esac
 
-    # go install -a -ldflags '-w -extldflags "-static"'
+    cd $GOPATH/src/github.com/gostones/gotty; if [ $? != 0 ]; then
+        exit 1
+    fi
+    go install -a -ldflags '-w -extldflags "-static"'; if [ $? != 0 ]; then
+        exit 1
+    fi
 }
 
 # traefik
 function install_traefik {
     echo "install_traefik"
+    VERSION=v1.7.9
+
+    url="https://github.com/containous/traefik/releases/download/${VERSION}/traefik_${GOOS}-${GOARCH}"
+    case "$GOOS" in
+        windows)
+            download_file "${url}.exe" "traefik.exe"
+            ;;
+        *)
+            download_file "${url}" "traefik"
+            ;;
+    esac
 
     # export GOPATH=$DHNT_BASE/go
     # export GO111MODULE=auto
@@ -220,6 +239,19 @@ function install_chisel {
 # filebrowser
 function install_filebrowser {
     echo "install_filebrowser"
+    VERSION=v2.0.3
+
+    url="https://github.com/filebrowser/filebrowser/releases/download/${VERSION}/${GOOS}-${GOARCH}-filebrowser"
+    case "$GOOS" in
+        windows)
+            download_zip "${url}.zip"
+            mv $DHNT_BASE/dl/${GOOS}_${GOARCH}/filebrowser.exe $GOPATH/bin/${GOOS}_${GOARCH}
+            ;;
+        *)
+            download_gz "${url}.tar.gz"
+            mv $DHNT_BASE/dl/${GOOS}_${GOARCH}/filebrowser $GOPATH/bin/${GOOS}_${GOARCH}
+            ;;
+    esac
 
     # export GOPATH=$DHNT_BASE/go
     # export GO111MODULE=on
@@ -296,8 +328,8 @@ for i in "${goos[@]}"; do
     export GOARCH=amd64
     export CGO_ENABLED=0
     
-    mkdir -p $GOPATH/bin/${GOOS}-${GOARCH}
-    mkdir -p $DHNT_BASE/dl/${GOOS}-${GOARCH}
+    mkdir -p $GOPATH/bin/${GOOS}_${GOARCH}
+    mkdir -p $DHNT_BASE/dl/${GOOS}_${GOARCH}
 
     case "$1" in
         ipfs)
