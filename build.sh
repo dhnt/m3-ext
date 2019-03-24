@@ -4,37 +4,38 @@ set -x
 
 source setenv.sh
 
+##
+
+# args: url
+function download_gz {
+    temp=temp_$$.tar.gz
+    wget --no-check-certificate -q -O ${temp} "$1" 
+    tar -xzvf ${temp} -C $DHNT_BASE/dl/${GOOS}-${GOARCH}
+    rm ${temp}
+}
+function download_zip {
+    temp=temp_$$.zip
+    wget --no-check-certificate -q -O ${temp} "$1"
+    unzip ${temp} -d $DHNT_BASE/dl/${GOOS}-${GOARCH}
+    rm ${temp}
+}
+
 # ipfs
 function install_ipfs {
     echo "install_ipfs"
-    # export GOPATH=$DHNT_BASE/go
-    # export GO111MODULE=off
+    VERSION=v0.4.19
 
-    # mkdir -p $GOPATH/src/github.com/ipfs
-    # cd $GOPATH/src/github.com/ipfs
-    # # rm -rf go-ipfs
-
-    # git clone https://github.com/ipfs/go-ipfs.git; if [ $? -ne 0 ]; then
-    #     echo "Git repo exists?"
-    # fi
-    # cd go-ipfs
-    
-    # #
-    # # some dependant tools need to be executable on the build system
-    # (GOOS=  GOARCH= make clean build)
-
-    # #
-    # make install
-
-    # # initialization example:
-    # # ipfs init 
-    # # #optional - change default ports
-    # # #ipfs config Addresses
-    # # ipfs config Addresses.Gateway /ip4/0.0.0.0/tcp/9001
-    # # #ipfs config Addresses.API /ip4/0.0.0.0/tcp/5001
-    # # ipfs config --json API.HTTPHeaders.Access-Control-Allow-Origin '["http://ipfs.home", "http://127.0.0.1:5001", "https://webui.ipfs.io"]'
-    # # ipfs config --json API.HTTPHeaders.Access-Control-Allow-Methods '["PUT", "GET", "POST"]'
-    # # #$GOPATH/bin/ipfs
+    url="https://github.com/ipfs/go-ipfs/releases/download/${VERSION}/go-ipfs_${VERSION}_${GOOS}-${GOARCH}"
+    case "$GOOS" in
+        windows)
+            download_zip "${url}.zip"
+            mv $DHNT_BASE/dl/${GOOS}-${GOARCH}/go-ipfs/ipfs.exe $GOPATH/bin/${GOOS}-${GOARCH}
+            ;;
+        *)
+            download_gz "${url}.tar.gz"
+            mv $DHNT_BASE/dl/${GOOS}-${GOARCH}/go-ipfs/ipfs $GOPATH/bin/${GOOS}-${GOARCH}
+            ;;
+    esac
 }
 
 # git server
@@ -286,12 +287,18 @@ function install_all {
 }
 
 ##
+rm -rf $GOPATH/bin/
+rm -rf $DHNT_BASE/dl/
+
 for i in "${goos[@]}"; do
     export GOOS=$i   
 	echo $GOOS
     export GOARCH=amd64
     export CGO_ENABLED=0
     
+    mkdir -p $GOPATH/bin/${GOOS}-${GOARCH}
+    mkdir -p $DHNT_BASE/dl/${GOOS}-${GOARCH}
+
     case "$1" in
         ipfs)
             install_ipfs
