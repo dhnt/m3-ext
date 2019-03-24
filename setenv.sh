@@ -1,4 +1,4 @@
-function set_env() {
+function set_env {
     export DHNT_BASE=$PWD/build
     export GOPATH=$DHNT_BASE/go
     #

@@ -10,7 +10,8 @@ source setenv.sh
 # export CGO_ENABLED=0
 
 # ipfs
-function install_ipfs() {
+function install_ipfs {
+    echo "install_ipfs"
     # export GOPATH=$DHNT_BASE/go
     # export GO111MODULE=off
 
@@ -42,7 +43,9 @@ function install_ipfs() {
 }
 
 # git server
-function install_gogs() {
+function install_gogs {
+    echo "install_gogs"
+
     # export CC=x86_64-linux-musl-gcc
     # export CXX=x86_64-linux-musl-g++ 
 
@@ -81,7 +84,8 @@ function install_gogs() {
 }
 
 # web terminal
-function install_gotty() {
+function install_gotty {
+    echo "install_gotty"
     # export GOPATH=$DHNT_BASE/go
     # export GO111MODULE=off
 
@@ -97,7 +101,9 @@ function install_gotty() {
 }
 
 # traefik
-function install_traefik() {
+function install_traefik {
+    echo "install_traefik"
+
     # export GOPATH=$DHNT_BASE/go
     # export GO111MODULE=auto
 
@@ -129,7 +135,9 @@ function install_traefik() {
 }
 
 # reverse proxy
-function install_frp() {
+function install_frp {
+    echo "install_frp"
+
     # export GOPATH=$DHNT_BASE/go
     # export GO111MODULE=on
 
@@ -148,7 +156,9 @@ function install_frp() {
 }
 
 # gost
-function install_gost() {
+function install_gost {
+    echo "install_gost"
+
     # export GOPATH=$DHNT_BASE/go
     # export GO111MODULE=off
 
@@ -163,7 +173,9 @@ function install_gost() {
 }
 
 # etcd
-function install_etcd() {
+function install_etcd {
+    echo "install_etcd"
+
     # export GOPATH=$DHNT_BASE/go
     # export GO111MODULE=off
 
@@ -179,25 +191,29 @@ function install_etcd() {
 }
 
 # caddy
-function install_caddy() {
-    export GOPATH=$DHNT_BASE/go
-    export GO111MODULE=off
+function install_caddy {
+    echo "install_caddy TODO"
 
-    mkdir -p $GOPATH/src/github.com/mholt
-    cd $GOPATH/src/github.com/mholt
-    git clone -b m3-v0.11.4 https://github.com/gostones/caddy.git; if [ $? -ne 0 ]; then
-        echo "Git repo exists?"
-    fi
-    go get github.com/caddyserver/builds
-    go get github.com/abiosoft/caddy-git
-    cd caddy
+    # export GOPATH=$DHNT_BASE/go
+    # export GO111MODULE=off
 
-    # go run build.go --goos=$GOOS --goarch=$GOARCH
-    go install ./caddy/...
+    # mkdir -p $GOPATH/src/github.com/mholt
+    # cd $GOPATH/src/github.com/mholt
+    # git clone -b m3-v0.11.4 https://github.com/gostones/caddy.git; if [ $? -ne 0 ]; then
+    #     echo "Git repo exists?"
+    # fi
+    # go get github.com/caddyserver/builds
+    # go get github.com/abiosoft/caddy-git
+    # cd caddy
+
+    # # go run build.go --goos=$GOOS --goarch=$GOARCH
+    # go install ./caddy/...
 }
 
 # chisel
-function install_chisel() {
+function install_chisel {
+    echo "install_chisel"
+
     # export GOPATH=$DHNT_BASE/go
     # export GO111MODULE=on
 
@@ -212,7 +228,9 @@ function install_chisel() {
 }
 
 # filebrowser
-function install_filebrowser() {
+function install_filebrowser {
+    echo "install_filebrowser"
+
     # export GOPATH=$DHNT_BASE/go
     # export GO111MODULE=on
 
@@ -245,7 +263,9 @@ function install_filebrowser() {
 }
 
 # hugo
-function install_hugo() {
+function install_hugo {
+    echo "install_hugo"
+
     # export GOPATH=$DHNT_BASE/go
     # export GO111MODULE=on
 
@@ -262,7 +282,7 @@ function install_hugo() {
     # go install
 }
 
-function install_all() {
+function install_all {
     install_ipfs
     install_gogs
     install_gotty
@@ -270,7 +290,7 @@ function install_all() {
     install_frp
     install_gost
     install_etcd
-    # install_caddy
+    install_caddy
     install_chisel
     install_filebrowser
     install_hugo
@@ -280,7 +300,7 @@ function install_all() {
 
 set_env
 
-#
+##
 case "$1" in
         ipfs)
             install_ipfs
