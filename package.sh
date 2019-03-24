@@ -1,16 +1,22 @@
 #!/usr/bin/env bash
 
 set -x
-#
-rm -rf dist
-mkdir dist
+
+source setenv.sh
 
 #
-cp -R build/etc dist
-cp -R build/home dist
-cp -R build/go/bin/linux_amd64/ dist/bin/
+# rm -rf dist
+# mkdir dist
 
-tar -zcvf m3-ext.tar.gz dist/
+# #
+# cp -R build/etc dist
+# cp -R build/home dist
+# cp -R build/go/bin/linux_amd64/ dist/bin/
+
+# tar -zcvf m3-ext.tar.gz dist/
 ##
+
+echo "Package done!"
+
 
 
