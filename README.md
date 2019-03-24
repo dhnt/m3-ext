@@ -3,7 +3,9 @@
 A collection of tools in Golang
 
 ```
+goreleaser init
 goreleaser --snapshot --skip-publish --rm-dist
+
 export GITHUB_TOKEN='YOUR_TOKEN'
 
 git tag -a v0.1.0 -m "First release"

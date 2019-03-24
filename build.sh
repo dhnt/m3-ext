@@ -4,11 +4,6 @@ set -x
 
 source setenv.sh
 
-#linux
-# export GOOS=linux
-# export GOARCH=amd64
-# export CGO_ENABLED=0
-
 # ipfs
 function install_ipfs {
     echo "install_ipfs"
@@ -192,22 +187,16 @@ function install_etcd {
 
 # caddy
 function install_caddy {
-    echo "install_caddy TODO"
+    echo "install_caddy"
 
-    # export GOPATH=$DHNT_BASE/go
-    # export GO111MODULE=off
+    export GO111MODULE=off
 
-    # mkdir -p $GOPATH/src/github.com/mholt
-    # cd $GOPATH/src/github.com/mholt
-    # git clone -b m3-v0.11.4 https://github.com/gostones/caddy.git; if [ $? -ne 0 ]; then
-    #     echo "Git repo exists?"
-    # fi
-    # go get github.com/caddyserver/builds
-    # go get github.com/abiosoft/caddy-git
-    # cd caddy
-
-    # # go run build.go --goos=$GOOS --goarch=$GOARCH
-    # go install ./caddy/...
+    cd $GOPATH/src/github.com/mholt/caddy; if [ $? != 0 ]; then
+        exit 1
+    fi
+    go install -a ./caddy/...; if [ $? != 0 ]; then
+        exit 1
+    fi
 }
 
 # chisel
@@ -296,12 +285,14 @@ function install_all {
     install_hugo
 }
 
-## setup
-
-set_env
-
 ##
-case "$1" in
+for i in "${goos[@]}"; do
+    export GOOS=$i   
+	echo $GOOS
+    export GOARCH=amd64
+    export CGO_ENABLED=0
+    
+    case "$1" in
         ipfs)
             install_ipfs
             ;;
@@ -341,10 +332,10 @@ case "$1" in
             ;;
         *)
             install_all
-esac
+    esac
+done
 
-# chmod -R 755 $GOPATH/bin/
-
+#
 echo "Build done!"
 
 ##
