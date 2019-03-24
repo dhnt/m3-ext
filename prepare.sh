@@ -4,6 +4,20 @@ set -x
 
 source setenv.sh
 
+# ipfs
+function prepare_ipfs() {
+    echo "prepare_ipfs"
+    export GO111MODULE=on
+
+    mkdir -p $GOPATH/src/github.com/gostones
+    cd $GOPATH/src/github.com/gostones
+    git clone https://github.com/gostones/go-ipfs.git; if [ $? -ne 0 ]; then
+        echo "Git repo exists?"
+    fi
+    cd go-ipfs
+    go mod download
+}
+
 # web terminal
 function prepare_gotty {
     echo "prepare_gotty"
@@ -34,6 +48,7 @@ function prepare_caddy {
 }
 
 ##
+prepare_ipfs
 prepare_gotty
 prepare_caddy
 

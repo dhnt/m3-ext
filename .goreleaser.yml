@@ -8,8 +8,10 @@ before:
     # - go generate ./...
     - ./prepare.sh
 builds:
-- env:
-  - CGO_ENABLED=0
+- 
+  main: dummy.go
+  env:
+    - CGO_ENABLED=0
   goos:
     - darwin
     - linux
