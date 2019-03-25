@@ -2,6 +2,8 @@
 
 set -x
 
+BASE_DIR=$PWD
+
 source setenv.sh
 
 ##
@@ -387,5 +389,4 @@ done
 
 #
 echo "Build done!"
-
 ##

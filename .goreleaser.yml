@@ -23,7 +23,7 @@ builds:
     # - arm64
   hooks:
     pre: ./build.sh
-    post: ./package.sh
+    # post: ./package.sh
 
 archive:
   # replacements:
