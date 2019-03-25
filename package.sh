@@ -20,7 +20,11 @@ GOHOSTARCH=`go env GOHOSTARCH`
 mv $GOPATH/bin/* dist/${GOHOSTOS}_${GOHOSTARCH}
 rmdir $GOPATH/bin
 
-# tar -zcvf m3-ext.tar.gz dist/
+#
+for i in "${goos[@]}"; do
+    name=${i}-${GOARCH}
+    tar -zcvf dist/m3-ext.${TAG_NAME}.${name}.tar.gz -C dist ${i}_${GOARCH}
+done
 
 echo "Package done!"
 

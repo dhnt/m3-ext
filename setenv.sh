@@ -12,4 +12,10 @@ darwin
 linux
 windows
 )
+
+TAG_NAME=$(git tag -l --contains HEAD)
+if [ -z "$TAG_NAME" ]; then
+    echo "HEAD not tagged"
+    exit 1
+fi
 ##

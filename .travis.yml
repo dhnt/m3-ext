@@ -1,0 +1,26 @@
+##
+dist: xenial
+language: go
+sudo: false
+go:
+- 1.11.x
+env:
+  global:
+  - GOARCH=amd64
+before_install:
+- "./prepare.sh"
+install:
+- 
+script:
+- "./build.sh"
+- "./package.sh"
+notifications:
+  email: false
+deploy:
+  provider: releases
+  api_key:
+    secure: ELtjYNdGqHJfKBPv1k+itcXfRwYVBVMvHRSPXEPrHZeoSUmRwkcpI907LdxyxpnawB2ykwYg8agZOueNySKgj3QT5xQ5E3lPrMBMWH4oNjlrvLBjOaiAa80N0wP+N5uZMRQNT0IlRpTR8LsrrAzmmCq2CW/YOAsCtIcXlJ+47i02xGkys5YRWI3hZSOG+lsSe9FYWvN0t1gin8g2LJZY3T/C5d/5NxRRm0duRW7k0I/lKmN4pcz3Jd3C9jfaSHCeXSpqZNrt+lUg7uFpVa9pg8vz1mTZONfU8DfOYRx9v+uEGliWwcGTjR93Jq9/T+RwU4OrCT/GpESEHohLvg4nKipOrhEPBE/U3TSGft903FiO2aP7WVRB+B+cU/hmJ4etf5f7dwLMWmTXUP7ZyybmIBoaW15LZ0aGsvGlOUt7KXK1b8ritXCEG7VBTjzKy7OsEJDpZstbhkqdNWECsaJ4/KZ1B5v6AmpHW8wxf83VRVQjdfFEY/k9ft1BJHdqUUkNMVzNHn8tr5j1lUkuBjCzpgW2HxKUUp+G2CJEK4+xEz5eaHWqmYjBCja4dxuxh7PFNzEBQ3VK0k0rDe9I26rrcWW5wkpFbJp46VLpuaD+9Tsha9r8hKU2guE+jZi1Kl9bc2yv18dfCJHICDHSHsdmnOU+SHFwHKXVzQy9fqkV5J8=
+  file: dist/m3-ext*
+  on:
+    repo: dhnt/m3-ext
+    tags: true
